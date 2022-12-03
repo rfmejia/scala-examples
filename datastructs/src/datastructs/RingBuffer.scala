@@ -15,7 +15,7 @@ sealed trait RingBuffer[A]:
   def pop: Option[A]
 
 private[datastructs] class ArrayRingBuffer[A](
-    arr: Array[A],
+    arr: Array[Option[A]],
     overflowStrategy: RingBuffer.OverflowStrategy
 ) extends RingBuffer[A]:
   private var head = 0
@@ -27,7 +27,7 @@ private[datastructs] class ArrayRingBuffer[A](
   override def isEmpty: Boolean = head == tail
   override def nonEmpty: Boolean = !isEmpty
   override def isFull: Boolean = next(tail) == head
-  override def peek: Option[A] = if isEmpty then None else Some(arr(head))
+  override def peek: Option[A] = if isEmpty then None else arr(head)
   override def size: Int =
     if isEmpty then 0
     else if head < tail then tail - head
@@ -38,15 +38,16 @@ private[datastructs] class ArrayRingBuffer[A](
       Failure(sys.error("Cannot write to a full buffer, dropping"))
     else
       if isFull then head = next(head)
-      arr.update(tail, elem)
+      arr.update(tail, Some(elem))
       tail = next(tail)
+      arr.update(tail, None) // Keep the new tail clear to prevent dangling references
       Success(())
 
   override def pop: Option[A] =
     if isEmpty then None
     else
-      val elem = Some(arr(head))
-      // arr.update(head, null: A) // FIXME How do I remove this dangling reference?
+      val elem = arr(head)
+      arr.update(head, None)
       head = next(head)
       elem
 
@@ -75,4 +76,4 @@ object RingBuffer:
       size: Int = DefaultSize,
       strategy: OverflowStrategy = OverflowStrategy.Drop
   ) =
-    new ArrayRingBuffer(Array.ofDim[A](size + 1), strategy)
+    new ArrayRingBuffer(Array.fill[Option[A]](size + 1)(None), strategy)
