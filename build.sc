@@ -19,8 +19,8 @@ object finagle extends Scala213Module {
 }
 
 object datastructs extends Scala3Module {
-  object test extends Tests with TestModule.Utest {
-    def ivyDeps = Agg(ivy"com.lihaoyi::utest:0.8.1")
+  object test extends Tests with TestModule.Munit {
+    def ivyDeps = Agg(ivy"org.scalameta::munit:1.0.0-M7")
   }
 }
 

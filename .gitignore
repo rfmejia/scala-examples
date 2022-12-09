@@ -1,6 +1,8 @@
+*.worksheet.sc
 .bloop/
 .bsp/
 .metals/
-.scala-build/
-out/
 .mill-version
+.scala-build/
+.vite/
+out/
