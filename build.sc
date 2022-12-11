@@ -13,6 +13,11 @@ trait Scala3Module extends ScalaModule with ScalafmtModule {
   def scalacOptions = Seq("-encoding", "utf8", "-deprecation", "-feature")
 }
 
+trait Scala3NightlyModule extends ScalaModule with ScalafmtModule {
+  def scalaVersion = "3.3.0-RC1-bin-20221209-231f9ab-NIGHTLY"
+  def scalacOptions = Seq("-encoding", "utf8", "-deprecation", "-feature")
+}
+
 // SUBMODULES
 object finagle extends Scala213Module {
   def ivyDeps = Agg(ivy"com.twitter::finagle-http:22.4.0")
@@ -39,4 +44,8 @@ object scalajs_laminar extends ScalaJSModule with ScalafmtModule {
   def moduleDeps = Seq(scalablytyped.`scalablytyped-module`)
   def ivyDeps = Agg(ivy"org.scala-js::scalajs-dom::2.3.0", ivy"com.raquo::laminar::0.14.5")
   def scalablyTypedBasePath = T { millSourcePath }
+}
+
+object zio_direct extends Scala3NightlyModule {
+  def ivyDeps = Agg(ivy"dev.zio::zio-direct:1.0.0-RC1")
 }

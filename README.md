@@ -13,4 +13,5 @@ To compile the examples, the project requires `mill`.
 - `datastructs`
 - `finagle`
 - `lambdaweb4s`
+- `zio_direct`
 
